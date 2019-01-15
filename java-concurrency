@@ -1,0 +1,128 @@
+REFERENCES:
+	https://www.baeldung.com/java-concurrency
+	https://codepumpkin.com/countdownlatch-vs-cyclicbarrier/
+
+DIFFERENCE PROCESS VS THREAD
+	* Main difference Threads share a common memory (virtual memory in a predefined memory space), Processes have their own memory.
+	* Exchanging data is much faster in Threads approach
+	
+THREAD TYPES
+	- User Threads ( Default threads ) 
+	- Daemon Threads 
+		Less prior threads - will execute after all user threads end.
+		EX: Garbage Collector Threads
+		Don't use for I/O operations for avoiding system corruptions
+
+LIFE CYCLE OF A THREAD
+	NEW – newly created thread that has not yet started the execution
+	RUNNABLE – either running or ready for execution but it’s waiting for resource allocation
+	BLOCKED – waiting to acquire a monitor lock to enter or re-enter a synchronized block/method
+	WAITING – waiting for some other thread to perform a particular action without any time limit
+	TIMED_WAITING – waiting for some other thread to perform a specific action for a specified period
+	TERMINATED – has completed its execution
+
+	- LockSupport.park(),parkNanos(long time) 
+		* support to park current Thread until time(parkNanos()) or unpark() method has been called.
+	- Thread.join(), Thread.join(long time)
+		* Parent thread must wait until joined sub thread is completed
+			Ex : Thread1 create Thread2 -> Thread2.join() -> Thread1 wait even it completes his own work until Thread2 has been done.
+
+JAVA MEMORY MODEL (JMM)
+	* How multiple Java Thread access common memory and how the data changes are made by a Thread will be visible to other Threads.
+	* JMM guarantees if your operating system is 64-bit long, int and lowers primitive values are atomic to change
+		if operating system is 32-bit guarantees int and lowers but does not guarantee for long(64 bit) primitive values
+	* Guarantees of JMM
+		- Actions, these are inter-thread actions that can be executed by one thread and detected by another thread, like reading or writing variables, locking/unlocking monitors and so on
+		- Synchronization actions, a certain subset of actions, like reading/writing a volatile variable, or locking/unlocking a monitor
+		- Program Order (PO), the observable total order of actions inside a single thread
+		- Synchronization Order (SO), the total order between all synchronization actions — it has to be consistent with Program Order, that is, if two synchronization actions come one before another in PO, they occur in the same order in SO
+		synchronizes-with (SW) relation between certain synchronization actions, like unlocking of monitor and locking of the same monitor (in another or the same thread)
+		- Happens-before Order — combines PO with SW (this is called transitive closure in set theory) to create a partial ordering of all actions between threads. If one action happens-before another, then the results of the first action are observable by the second action (for instance, write of a variable in one thread and read in another)
+		- Happens-before consistency — a set of actions is HB-consistent if every read observes either the last write to that location in the happens-before order, or some other write via data race
+		- Execution — a certain set of ordered actions and consistency rules between them
+			
+KILLING A THREAD
+	* Thread.stop is deprecated because directly stopping a Thread can cause improper state Objects.
+	- You can kill a Thread by listening an AtomicBoolean Flag or something like that or by .terminate() function after an interruption
+
+SYNCHRONIZED BLOCK VS STATIC SYNCHRONIZED METHOD VS SYNCHRONIZED METHOD
+	* Monitor for Synchronized Block and Static Synchronized Methos is class's itself, for this reason all acquiring Threads use sam synchronization.
+	* Monitor for Synchronized Method is INSTANCE of class, so every instance will has its own synchronization.
+
+EXTEND THREAD vs IMPLEMENT RUNNABLE
+	* Runnable is better :) 
+		- if extend Thread that means you can not extend another class
+		- as Runnable has a one single unimplemented method after Java 8 we can use is lambda
+		
+RUNNABLE VS CALLABLE
+	* Callable can returns Future or CompletableFuture Objects
+	* with Callable you have to use declarative approach for exception handling
+		
+VOLATILE
+	* Simply an ordinary Thread hold its own memory with a separated area and right the result of itself 
+	to the main memory when execution has been done. 
+	* Volatile keyword mark this is a main memory object even it is defined in the Thread 
+	*** Volatile variables can lead to Race Condition. For this reason java core has avoiding data types
+		Atomic Objects (AtomicInt, AtomicLong, AtomicBoolean vs.)
+	* After Java 5 if you use a Volatile object in a block, other all objects will act as a Volatile Object even though they are not Volatile
+
+WAIT AND SLEEP
+	* Wait needs an instance , Sleep is static function
+	* We can use wait inside a synchronize block 
+	** With using wait in a thread we can release Locks. Sleep method does not release Locks
+	* We don't need to use a time count parameter in wait function, wait can awake with notify() or notifyAll() functions.
+	
+FUTURE
+	* For async operations, an interface for listening the result of the Thread operation
+
+THREADLOCAL
+	* A Thread specific object which has an implementation of map (thread id is key)
+	** Don't use with ExecutorService because ExecuterService can run lots of work in same thread. ThreadLocal must be Thread specific.
+	*** You can use a ConcurrentHashMap implementation instead of ThreadLocal via setting hash key to Thread constructor.
+	
+
+COMPLETABLEFUTURE
+	* Implements CompletionStage and Future
+		CompletionStage is a Promise interface
+	* Declarative type implementation for async functions
+	
+EXECUTORSERVICE
+	* Task Queue + Thread Pool
+	* Puts fired threads into Task Queue first and if enough source is available sends them to the predefined sized thread pool.
+	- Several Types of ExecutorService : 
+		- ScheduledThreadPoolExecutor
+		- ForkJoinPool
+			* Work Stealing Algorithm
+			* Dequeue
+		- Google Guava
+			- ListenableFuture (Ex : Futures.allAsList(future1, future2) - connect Future results into one single stream)
+
+BARRIERS
+	- CyclicBarrier
+		* new CyclicBarrier(COUNT_OF_THREADS_WILL_BE_WAITED, WHEN_BARRIER_REACHED_FUNCTION)
+		* Set a barrier point with barrier.await() 
+		* All threads wait when they come to barrier point until all Threads come to barrier point.
+		* When all threads reach to barrier point first WHEN_BARRIER_REACHED_FUNCTION is executed then all threads run rest of their code block
+	- CountDownLatch
+		* new CountDownLatch(COUNT_OF_THE_TO_BE_WAITING_THREAD) 
+		* One main thread will execute after all latched threads has been done
+
+LOCKS 
+	* Differences with Synchronized Blocks
+		- Fairness ( you can set fairness property to LOCKS)
+		- We can use lock and unlock in separated blocks 
+		- TryLock() function (Reduce blocking time)
+		- Waiting thread of the synchronizeBlock can not be terminated , for the LOCK Api = lockInterruptibly()
+	Implementations of LOCK Interface:
+		- ReentrantLock : 
+			similar to synchronize block	
+		- ReentrantReadWriteLock : 
+			In case of adding an ordinary Java Class;
+				- you can put write or read lock particular places 
+				- If a thread attempts to update the data while other threads are reading, the write thread also blocks until the read lock is released.
+		- StampedLock
+			similar to ReentrantReadWriteLock excepts needs Stamp to check the lock
+	Condition
+		* Conditions Lead Threads to Wait depends on a condition.
+		
+		
