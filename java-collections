@@ -1,0 +1,45 @@
+LISTS
+	LINKED LIST 
+		* not synchronized (can be synchronized via Collections.synchronizedList(new LinkedList(...));)
+		* Traverse to find an element (O(n) - finding an element's complexity is O(1) for ArrayList)
+		* Its Iterator is fail-fast( if list is changed while iterator creation it will throw exception )
+		* Each element in list keep two references. This causes extra memory usage if you compare to ArrayList
+		* Adding element and removing element is more efficient because just need to update neighbour references
+
+	ARRAY LIST
+		* Random access of an element takes O(1)
+		* Adding an element takes constant time O(1)
+		* Inserting/Deleting takes O(n)
+
+	IMMUTABLE ARRAY LIST 
+		* ImmutableList.copyOf(list);
+		* Collections.unmodifiableList(list);
+
+	COPYONWRITEARRAYLIST 
+		* For Thread Safe usage
+		* It provides a copy of the array when you want to write a new item to Array by that way you can read List without any harm.
+		* Removing an element while iterating is now allowed.
+
+SETS
+	TREESET
+		* Red-Black Tree ( Balanced Tree ) 
+		* Holds unique values
+		* Holds extra one bit for the colour
+		* Insert order is not necessary
+		* Store elements in ascending order
+		* not synchronized
+		* You can set the precision via : new TreeSet<>(Comparator.comparing(String::length));
+		* with Java 8 storing null values is no longer allowed
+		* Searching, adding , removing takes O(logn)
+	HASHSET
+	* Stores unique elements 
+	* Accepts null
+	* Does not maintain the insertion order
+	* Not Thread-safe
+		
+
+HASHMAP	
+	* Performance of a Hashmap depends on two parameters (new HashMap<>(32, 0.5f)): 
+		- Initial Size ( Size of the Hashmap when it has been created )
+		- Load Factor ( Resize factor when Hasmap will be extended )
+	
