@@ -1,0 +1,31 @@
+References : 
+https://spring.io/blog/2016/06/07/notes-on-reactive-programming-part-i-the-reactive-landscape
+https://medium.com/netflix-techblog/reactive-programming-in-the-netflix-api-with-rxjava-7811c3a1496a
+https://projectreactor.io/docs/core/release/reference/index.html#intro-reactive
+https://www.infoq.com/articles/reactor-by-example
+
+Key Concerns : 
+	- Create non-blocking Data streams
+	- Propagation of change
+	- use more threads and more hardware resources
+	- seek more efficiency for using existing resources
+
+Concepts : 
+	Backpressure -> in Reactive Programming Publisher is the source of the data and Subscriber is the consumer. In normal situation consumer execute data as same velocity 
+	that Publisher emits. But it is not so simple every time. When the speed of emitting is higher than consumer consumes, it creates a pressure on consumer. Backpressure is 
+	created for handling this situation.
+	Composition -> Reactive Libs allows to use lots of different sunsequent method for composing. You can create cool compositions to obtain deserving result.
+
+Reactive Use Cases 
+	- External Service Calls -> in case of you have to wait a call to proceed an other process, using reactive functionlity can help you to cope it and reduce time usage.
+	- Highly Concurrent Message Consumers -> In case of you receive too much message concurrently then you should use RP.
+	- Interoperable Spreadsheets operations -> Lets assume you have a cell A and cell B is direcly related with value of cell A and cell C value must be change
+	by changing cell B ....., in this case RP will be very effective , event imperative :)
+
+Difference between Streams
+	- Streams are for single use , you can subscribe RP publishers multiple time.
+	- RP dynamics are push based like in Observer Pattern , Streams are pull based. This condition is related to the first term(above)
+	- Streams have sync sequences, RP can represent async sequences.
+	- RP = Stream + CompletableFuture(In Java concurrency)
+	- RP has backpressure support
+	
