@@ -94,4 +94,21 @@ Percentiles and Moments
 		3- Skew (positive or negative - unbalanced curve )
 		4- Kurtosis (how sharp is the peak, how thick is the tail)
 
+K-Means
+	- Uses Unsupervizing data 
+	- if data scattered so distinctly you may figure out some value groups to determine possible other values 
+	
+Entropy
+	- How same or different the data values
+	* Decision Trees
+		- Decision Trees exist for reducing the differences (Entropy) of data
+		- Graphviz => crate flow charts for decision trees and tool will create the algorithm for you !
+		- ID3 algorithm
+	* Random Forests
+		- Forests of decision treees
+		- Decision trees are very good for existing data but not maybe not for real world data
+		- Creating lots of trees and comparing them is a good solution for finding the best decision tree
+		
+		
+	
 
